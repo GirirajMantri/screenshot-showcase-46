@@ -23,11 +23,11 @@ function Core() {
   return (
     <group>
       <mesh ref={ref}>
-        <icosahedronGeometry args={[1.15, 12]} />
+        <icosahedronGeometry args={[0.85, 12]} />
         <MeshDistortMaterial
-          color="#2f57d8"
+          color="#1d3a9e"
           emissive="#3b6bff"
-          emissiveIntensity={1.6}
+          emissiveIntensity={0.55}
           roughness={0.18}
           metalness={0.6}
           distort={0.32}
@@ -38,7 +38,7 @@ function Core() {
         <sphereGeometry args={[1.15, 48, 48]} />
         <meshBasicMaterial color="#4c7dff" transparent opacity={0.06} side={THREE.BackSide} />
       </mesh>
-      <pointLight color="#5b8cff" intensity={40} distance={14} />
+      <pointLight color="#5b8cff" intensity={14} distance={14} />
     </group>
   );
 }
@@ -193,7 +193,7 @@ export default function CoreScene() {
       <DataParticles />
       <Rig />
       <EffectComposer>
-        <Bloom intensity={1.15} luminanceThreshold={0.22} luminanceSmoothing={0.35} mipmapBlur />
+        <Bloom intensity={0.8} luminanceThreshold={0.45} luminanceSmoothing={0.35} mipmapBlur />
         <Vignette eskil={false} offset={0.25} darkness={0.85} />
       </EffectComposer>
     </Canvas>
