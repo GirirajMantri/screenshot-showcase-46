@@ -38,7 +38,7 @@ const SUGGESTIONS = [
   "What's the onboarding checklist for a new engineer?",
 ];
 
-const SCRIPT: Record<string, Omit<Msg, "id" | "role">> = {
+const SCRIPT: Record<"default" | "expense" | "onboarding", Omit<Msg, "id" | "role">> = {
   default: {
     text: "Your VPN is failing because split tunneling is disabled on the new gateway — reset the client profile and reconnect. Separately, your team policy allows two remote days per week, so working from home tomorrow is approved.",
     evidence: [
