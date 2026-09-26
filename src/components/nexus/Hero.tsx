@@ -24,6 +24,13 @@ export function Hero() {
       <div className="pointer-events-none absolute inset-0 grid-bg opacity-60" />
       <div className="pointer-events-none absolute inset-0 aurora-bg opacity-70 mix-blend-screen" />
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-56 bg-gradient-to-t from-background to-transparent" />
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(ellipse 45% 38% at 50% 52%, color-mix(in oklab, var(--background) 72%, transparent), transparent 75%)",
+        }}
+      />
 
       <div className="relative z-10 mx-auto flex h-full max-w-5xl flex-col items-center justify-center px-6 text-center">
         <motion.p
