@@ -43,6 +43,46 @@ function Core() {
   );
 }
 
+function Shell() {
+  const a = useRef<THREE.Mesh>(null);
+  const b = useRef<THREE.Mesh>(null);
+  const r1 = useRef<THREE.Mesh>(null);
+  const r2 = useRef<THREE.Mesh>(null);
+  const r3 = useRef<THREE.Mesh>(null);
+  useFrame(({ clock }) => {
+    const t = clock.getElapsedTime();
+    if (a.current) { a.current.rotation.x = t * 0.15; a.current.rotation.y = -t * 0.2; }
+    if (b.current) { b.current.rotation.y = t * 0.1; b.current.rotation.z = t * 0.07; }
+    if (r1.current) { r1.current.rotation.x = Math.PI / 2 + Math.sin(t * 0.4) * 0.3; r1.current.rotation.z = t * 0.5; }
+    if (r2.current) { r2.current.rotation.y = t * 0.35; r2.current.rotation.x = 0.9; }
+    if (r3.current) { r3.current.rotation.x = -t * 0.28; r3.current.rotation.y = 0.6; }
+  });
+  return (
+    <group>
+      <mesh ref={a}>
+        <icosahedronGeometry args={[1.35, 1]} />
+        <meshBasicMaterial color="#7aa2ff" wireframe transparent opacity={0.22} />
+      </mesh>
+      <mesh ref={b}>
+        <dodecahedronGeometry args={[1.8, 0]} />
+        <meshBasicMaterial color="#a78bfa" wireframe transparent opacity={0.1} />
+      </mesh>
+      <mesh ref={r1}>
+        <torusGeometry args={[1.7, 0.012, 8, 160]} />
+        <meshBasicMaterial color="#38bdf8" toneMapped={false} />
+      </mesh>
+      <mesh ref={r2}>
+        <torusGeometry args={[2.05, 0.008, 8, 160]} />
+        <meshBasicMaterial color="#8b5cf6" toneMapped={false} />
+      </mesh>
+      <mesh ref={r3}>
+        <torusGeometry args={[2.4, 0.006, 8, 160]} />
+        <meshBasicMaterial color="#22d3ee" transparent opacity={0.7} toneMapped={false} />
+      </mesh>
+    </group>
+  );
+}
+
 function OrbitRing({ radius, tilt }: { radius: number; tilt: number }) {
   const points = useMemo(() => {
     const p: [number, number, number][] = [];
@@ -89,8 +129,27 @@ function DomainNode({
     }
   });
 
+  const pulses = useRef<(THREE.Mesh | null)[]>([]);
+  useFrame(({ clock }) => {
+    if (!group.current) return;
+    const p = group.current.position;
+    const t = clock.getElapsedTime();
+    pulses.current.forEach((m, i) => {
+      if (!m) return;
+      const k = ((t * 0.45 + i / 3 + angle) % 1);
+      m.position.set(p.x * k, p.y * k, p.z * k);
+      m.scale.setScalar(0.6 + Math.sin(k * Math.PI) * 0.8);
+    });
+  });
+
   return (
     <>
+      {[0, 1, 2].map((i) => (
+        <mesh key={i} ref={(el) => { pulses.current[i] = el; }}>
+          <sphereGeometry args={[0.045, 12, 12]} />
+          <meshBasicMaterial color={color} toneMapped={false} />
+        </mesh>
+      ))}
       <Line
         ref={lineRef}
         points={linkPoints}
@@ -185,6 +244,7 @@ export default function CoreScene() {
       <directionalLight position={[4, 6, 3]} intensity={1.1} color="#9db8ff" />
       <Stars radius={60} depth={40} count={2200} factor={3} saturation={0} fade speed={0.4} />
       <Core />
+      <Shell />
       <OrbitRing radius={3.2} tilt={0.35} />
       <OrbitRing radius={4.4} tilt={-0.22} />
       {DOMAINS.map((d) => (
