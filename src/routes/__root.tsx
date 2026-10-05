@@ -77,9 +77,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "NEXUS — Enterprise Intelligence Orchestrator" },
+      { title: "BEACON — Enterprise Intelligence Orchestrator" },
       { name: "description", content: "One question. Multiple systems. One intelligent answer." },
-      { property: "og:title", content: "NEXUS — Enterprise Intelligence Orchestrator" },
+      { property: "og:title", content: "BEACON — Enterprise Intelligence Orchestrator" },
       { property: "og:description", content: "One question. Multiple systems. One intelligent answer." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

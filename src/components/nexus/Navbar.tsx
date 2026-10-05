@@ -45,7 +45,7 @@ export function Navbar() {
               : "0 0 0 transparent",
           }}
         >
-          NEXUS
+          BEACON
         </Link>
 
         <div className="hidden items-center gap-8 md:flex">

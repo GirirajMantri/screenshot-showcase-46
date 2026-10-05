@@ -10,15 +10,26 @@ const DOMAINS = [
   { label: "Finance", color: "#22d3ee", angle: (Math.PI * 4) / 3 },
 ];
 
+const NODE_TARGETS: Record<string, string> = {
+  HR: "knowledge",
+  IT: "architecture",
+  Finance: "trust",
+};
+
 function Core() {
   const ref = useRef<THREE.Mesh>(null);
+  const light = useRef<THREE.PointLight>(null);
   useFrame(({ clock }) => {
     const t = clock.getElapsedTime();
+    // cinematic power-up: core boots from dark to full energy over ~2.4s
+    const boot = 1 - Math.pow(1 - Math.min(1, t / 2.4), 3);
     if (ref.current) {
       ref.current.rotation.y = t * 0.12;
-      const s = 1 + Math.sin(t * 0.9) * 0.025;
+      const s = (1 + Math.sin(t * 0.9) * 0.025) * (0.08 + 0.92 * boot);
       ref.current.scale.setScalar(s);
+      (ref.current.material as THREE.MeshDistortMaterial).emissiveIntensity = 0.55 * boot;
     }
+    if (light.current) light.current.intensity = 14 * boot;
   });
   return (
     <group>
@@ -38,8 +49,29 @@ function Core() {
         <sphereGeometry args={[1.15, 48, 48]} />
         <meshBasicMaterial color="#4c7dff" transparent opacity={0.06} side={THREE.BackSide} />
       </mesh>
-      <pointLight color="#5b8cff" intensity={14} distance={14} />
+      <pointLight ref={light} color="#5b8cff" intensity={0} distance={14} />
+      <CorePulse />
+      <CorePulse offset={2.1} />
     </group>
+  );
+}
+
+/** Energy shockwave that expands outward from the core every few seconds. */
+function CorePulse({ offset = 0 }: { offset?: number }) {
+  const ring = useRef<THREE.Mesh>(null);
+  useFrame(({ clock }) => {
+    const t = clock.getElapsedTime() + offset;
+    if (!ring.current) return;
+    const k = (t % 4.2) / 4.2;
+    ring.current.scale.setScalar(1.1 + k * 6);
+    (ring.current.material as THREE.MeshBasicMaterial).opacity =
+      0.26 * (1 - k) * Math.min(1, t / 3.5);
+  });
+  return (
+    <mesh ref={ring} rotation={[Math.PI / 2.4, 0.3, 0]}>
+      <torusGeometry args={[1, 0.014, 8, 96]} />
+      <meshBasicMaterial color="#5b8cff" transparent opacity={0} toneMapped={false} />
+    </mesh>
   );
 }
 
@@ -104,11 +136,13 @@ function DomainNode({
   color,
   angle,
   radius,
+  onSelect,
 }: {
   label: string;
   color: string;
   angle: number;
   radius: number;
+  onSelect?: () => void;
 }) {
   const group = useRef<THREE.Group>(null);
   const [hovered, setHovered] = useState(false);
@@ -122,10 +156,15 @@ function DomainNode({
 
   const linkPoints = useMemo<[number, number, number][]>(() => [[0, 0, 0], [0, 0, 0]], []);
   const lineRef = useRef<any>(null);
-  useFrame(() => {
+  useFrame(({ clock }) => {
     if (group.current && lineRef.current) {
       const p = group.current.position;
       lineRef.current.geometry.setPositions([0, 0, 0, p.x, p.y, p.z]);
+      const t = clock.getElapsedTime();
+      // alive: data links breathe and flicker instead of sitting at a flat opacity
+      const flicker =
+        0.3 + 0.13 * Math.sin(t * 3 + angle * 7) * Math.sin(t * 1.7 + angle * 3);
+      (lineRef.current.material as THREE.LineBasicMaterial).opacity = hovered ? 0.85 : flicker;
     }
   });
 
@@ -161,8 +200,19 @@ function DomainNode({
       <group ref={group}>
         <Float speed={1.4} floatIntensity={0.5} rotationIntensity={0.3}>
           <mesh
-            onPointerOver={() => setHovered(true)}
-            onPointerOut={() => setHovered(false)}
+            onClick={(e) => {
+              e.stopPropagation();
+              onSelect?.();
+            }}
+            onPointerOver={(e) => {
+              e.stopPropagation();
+              setHovered(true);
+              document.body.style.cursor = "pointer";
+            }}
+            onPointerOut={() => {
+              setHovered(false);
+              document.body.style.cursor = "auto";
+            }}
             scale={hovered ? 1.25 : 1}
           >
             <octahedronGeometry args={[0.26, 0]} />
@@ -236,7 +286,7 @@ export default function CoreScene() {
     <Canvas
       dpr={[1, 1.6]}
       gl={{ antialias: true, powerPreference: "high-performance" }}
-      camera={{ position: [0, 1.2, 7.2], fov: 46 }}
+      camera={{ position: [0, 5.5, 27], fov: 46 }}
     >
       <color attach="background" args={["#080c18"]} />
       <fog attach="fog" args={["#080c18", 9, 20]} />
@@ -248,7 +298,16 @@ export default function CoreScene() {
       <OrbitRing radius={3.2} tilt={0.35} />
       <OrbitRing radius={4.4} tilt={-0.22} />
       {DOMAINS.map((d) => (
-        <DomainNode key={d.label} {...d} radius={3.4} />
+        <DomainNode
+          key={d.label}
+          {...d}
+          radius={3.4}
+          onSelect={() =>
+            document
+              .getElementById(NODE_TARGETS[d.label] ?? "knowledge")
+              ?.scrollIntoView({ behavior: "smooth" })
+          }
+        />
       ))}
       <DataParticles />
       <Rig />

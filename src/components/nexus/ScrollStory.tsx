@@ -45,7 +45,7 @@ function DoorsMerge() {
             >
               <div className="absolute inset-0 rounded-3xl bg-primary/10 blur-2xl" />
               <span className="relative font-display text-3xl font-bold tracking-[0.35em] text-foreground">
-                NEXUS
+                BEACON
               </span>
               <span className="relative mt-3 text-xs text-muted-foreground">The One Front Door</span>
             </motion.div>
