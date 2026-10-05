@@ -8,9 +8,9 @@ import { Footer } from "@/components/nexus/Footer";
 import { CursorGlow } from "@/components/nexus/CursorGlow";
 import { useSmoothScroll } from "@/components/nexus/useLenis";
 
-const TITLE = "NEXUS — One Front Door For Your Enterprise";
+const TITLE = "BEACON — One Front Door For Your Enterprise";
 const DESCRIPTION =
-  "NEXUS is the enterprise AI orchestrator that routes one question across HR, IT and Finance systems and returns one grounded, cited answer.";
+  "BEACON is the enterprise AI orchestrator that routes one question across HR, IT and Finance systems and returns one grounded, cited answer.";
 
 export const Route = createFileRoute("/")({
   head: () => ({

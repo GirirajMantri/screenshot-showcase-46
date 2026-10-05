@@ -4,9 +4,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ArrowUp, Sparkles, ShieldCheck, Network, FileText } from "lucide-react";
 import { CursorGlow } from "@/components/nexus/CursorGlow";
 
-const TITLE = "NEXUS Assistant — Ask your enterprise anything";
+const TITLE = "BEACON Assistant — Ask your enterprise anything";
 const DESCRIPTION =
-  "The NEXUS command interface: live agent routing, grounded evidence cards, confidence scoring and human escalation in one conversation.";
+  "The BEACON command interface: live agent routing, grounded evidence cards, confidence scoring and human escalation in one conversation.";
 
 export const Route = createFileRoute("/assistant")({
   head: () => ({
@@ -110,7 +110,7 @@ function AssistantPage() {
       <aside className="relative z-10 hidden w-72 shrink-0 p-4 lg:block">
         <div className="glass-panel flex h-full flex-col rounded-3xl p-5">
           <Link to="/" className="font-display text-sm font-bold tracking-[0.42em] text-foreground">
-            NEXUS
+            BEACON
           </Link>
           <p className="mt-2 text-[11px] text-muted-foreground">Enterprise orchestrator</p>
 
@@ -219,7 +219,7 @@ function AssistantPage() {
                 >
                   <div className="flex items-center gap-2 text-[11px] text-muted-foreground">
                     <Sparkles className="h-3.5 w-3.5 animate-pulse text-primary" />
-                    Nexus is orchestrating
+                    Beacon is orchestrating
                   </div>
                   <div className="mt-4 flex flex-wrap gap-2">
                     {thinking.map((a, i) => (
@@ -293,7 +293,7 @@ function NexusMessage({ msg }: { msg: Msg }) {
         <div className="flex items-center gap-2">
           <span className="h-1.5 w-1.5 animate-breathe rounded-full bg-primary" />
           <span className="font-mono text-[10px] tracking-[0.24em] text-muted-foreground">
-            NEXUS
+            BEACON
           </span>
           {msg.confidence && (
             <span className="ml-auto rounded-full border border-primary/40 bg-primary/10 px-2.5 py-1 font-mono text-[10px] text-foreground">

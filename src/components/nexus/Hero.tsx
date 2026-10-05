@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { useNavigate } from "@tanstack/react-router";
 import { ClientOnly } from "./ClientOnly";
 import { MagneticButton } from "./MagneticButton";
+import { IntroSequence } from "./IntroSequence";
 
 const CoreScene = lazy(() => import("./CoreScene"));
 
@@ -11,6 +12,7 @@ export function Hero() {
 
   return (
     <section className="noise relative h-[100svh] w-full overflow-hidden">
+      <IntroSequence />
       <div className="absolute inset-0">
         <ClientOnly
           fallback={<div className="aurora-bg h-full w-full" />}
@@ -76,7 +78,7 @@ export function Hero() {
             Explore Architecture
           </MagneticButton>
           <MagneticButton variant="ghost" onClick={() => navigate({ to: "/assistant" })}>
-            Launch Nexus
+            Launch Beacon
           </MagneticButton>
         </motion.div>
       </div>
