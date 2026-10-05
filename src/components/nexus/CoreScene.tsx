@@ -27,7 +27,7 @@ function Core() {
       ref.current.rotation.y = t * 0.12;
       const s = (1 + Math.sin(t * 0.9) * 0.025) * (0.08 + 0.92 * boot);
       ref.current.scale.setScalar(s);
-      (ref.current.material as THREE.MeshDistortMaterial).emissiveIntensity = 0.55 * boot;
+      (ref.current.material as THREE.MeshStandardMaterial).emissiveIntensity = 0.55 * boot;
     }
     if (light.current) light.current.intensity = 14 * boot;
   });
